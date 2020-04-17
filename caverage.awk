@@ -20,8 +20,7 @@ NR == 1	{		# first record only
 				printf "\nRecord %d skipped:\n\t", nrecord
 				for (count = 1; count <= nfields; count++) # for bad records, loop through each field
 				{
-					print count, ": ", $count, " -- "
-#printf "%-8s", $count
+					printf "%-8s", $count
 				}
 				printf "\n"
 	    		next					# ignore the rest of the commands for the 
@@ -31,25 +30,28 @@ NR == 1	{		# first record only
 	    		goodrecord += 1
 	    		for (count = 1; count <= nfields; count++)	# for good records, loop through each field
 	    		{
-					printf "%8.2f", $count > "caverage.out"	
+					printf "%8.2f", $count > "caverage.out"
+					gtotal += $count
+					sum[count] += $count
 	    		}
 	    		print "\n" > "caverage.out"
 		}
 	}
 END	{	# print summary after processing the last record
-	    print "\n"
 
 	    for (count = 1; count <= nfields; count++)
 	    {
-		print " =======" > "caverage.out"
+			print " =======" > "caverage.out"
 	    }
 	    print "\n" > "caverage.out"
-	    for (count = 1; count <= nfields; count++)
+	    
+		for (count = 1; count <= nfields; count++)
 	    {
-		printf "%8.2f", sum[count] / goodrecord > "caverage.out"
+			printf "%8.2f", sum[count] / goodrecord > "caverage.out"
 	    }
-	    print "\n\n  Total Records: " nrecord "  Good Records: " \
-	          goodrecord "  Discarded Records: " discarded > "caverage.out"
+	    
+		print "\n\n  Total Records: " nrecord "  Good Records: " \
+			goodrecord "  Discarded Records: " discarded > "caverage.out"
 	    print "\n  Grand Average " gtotal / (goodrecord * nfields) \
                   "\n" > "caverage.out"
 	}
